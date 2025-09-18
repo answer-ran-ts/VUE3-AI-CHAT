@@ -1,0 +1,21 @@
+/* 导入主题颜色配置 */
+@import './themes.css';
+
+html,
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.n-config-provider {
+    height: 100%;
+}
+
+/* 侧边栏激活项样式 */
+.n-layout-sider .active {
+    background: var(--sidebar-item-active);
+    color: var(--sidebar-item-active-text);
+}

@@ -1,0 +1,153 @@
+/* 主题颜色配置 */
+
+/* 明亮主题 */
+:root {
+  /* 消息气泡颜色 */
+  --msg-bg: #f1f2f5;
+  --msg-user-bg: #18a058;
+  --msg-assistant-bg: #ffffff;
+  
+  /* 头像颜色 */
+  --avatar-user-bg: #18a058;
+  --avatar-assistant-bg: #4098fc;
+  
+  /* 文本颜色 */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-user: #ffffff;
+  --text-assistant: #333333;
+  
+  /* 边框颜色 */
+  --border: #e0e0e0;
+  --border-light: #f0f0f0;
+  
+  /* 背景颜色 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-hover: #f5f5f5;
+  --bg-active: #e6f7ff;
+  
+  /* 侧边栏颜色 */
+  --sidebar-bg: #ffffff;
+  --sidebar-item-hover: #f5f5f5;
+  --sidebar-item-active: #e6f7ff;
+  --sidebar-item-active-text: #1890ff;
+  
+  /* 滚动条颜色 */
+  --scrollbar-bg: rgba(144, 147, 153, 0.3);
+  --scrollbar-hover: rgba(144, 147, 153, 0.6);
+}
+
+/* 暗色主题 */
+[data-theme="dark"] {
+  /* 消息气泡颜色 */
+  --msg-bg: #2d2d2d;
+  --msg-user-bg: #18a058;
+  --msg-assistant-bg: #3c3c3c;
+  
+  /* 头像颜色 */
+  --avatar-user-bg: #18a058;
+  --avatar-assistant-bg: #4098fc;
+  
+  /* 文本颜色 */
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-user: #ffffff;
+  --text-assistant: #ffffff;
+  
+  /* 边框颜色 */
+  --border: #404040;
+  --border-light: #333333;
+  
+  /* 背景颜色 */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-hover: #2d2d2d;
+  --bg-active: #1e3a5f;
+  
+  /* 侧边栏颜色 */
+  --sidebar-bg: #1a1a1a;
+  --sidebar-item-hover: #2d2d2d;
+  --sidebar-item-active: #1e3a5f;
+  --sidebar-item-active-text: #4098fc;
+  
+  /* 滚动条颜色 */
+  --scrollbar-bg: rgba(255, 255, 255, 0.1);
+  --scrollbar-hover: rgba(255, 255, 255, 0.3);
+}
+
+/* 自定义主题示例 - 蓝色主题 */
+[data-theme="blue"] {
+  /* 消息气泡颜色 */
+  --msg-bg: #e6f7ff;
+  --msg-user-bg: #1890ff;
+  --msg-assistant-bg: #ffffff;
+  
+  /* 头像颜色 */
+  --avatar-user-bg: #1890ff;
+  --avatar-assistant-bg: #52c41a;
+  
+  /* 文本颜色 */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-user: #ffffff;
+  --text-assistant: #333333;
+  
+  /* 边框颜色 */
+  --border: #d9d9d9;
+  --border-light: #f0f0f0;
+  
+  /* 背景颜色 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-hover: #e6f7ff;
+  --bg-active: #bae7ff;
+  
+  /* 侧边栏颜色 */
+  --sidebar-bg: #ffffff;
+  --sidebar-item-hover: #e6f7ff;
+  --sidebar-item-active: #bae7ff;
+  --sidebar-item-active-text: #1890ff;
+  
+  /* 滚动条颜色 */
+  --scrollbar-bg: rgba(24, 144, 255, 0.3);
+  --scrollbar-hover: rgba(24, 144, 255, 0.6);
+}
+
+/* 自定义主题示例 - 紫色主题 */
+[data-theme="purple"] {
+  /* 消息气泡颜色 */
+  --msg-bg: #f9f0ff;
+  --msg-user-bg: #722ed1;
+  --msg-assistant-bg: #ffffff;
+  
+  /* 头像颜色 */
+  --avatar-user-bg: #722ed1;
+  --avatar-assistant-bg: #eb2f96;
+  
+  /* 文本颜色 */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-user: #ffffff;
+  --text-assistant: #333333;
+  
+  /* 边框颜色 */
+  --border: #d9d9d9;
+  --border-light: #f0f0f0;
+  
+  /* 背景颜色 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-hover: #f9f0ff;
+  --bg-active: #efdbff;
+  
+  /* 侧边栏颜色 */
+  --sidebar-bg: #ffffff;
+  --sidebar-item-hover: #f9f0ff;
+  --sidebar-item-active: #efdbff;
+  --sidebar-item-active-text: #722ed1;
+  
+  /* 滚动条颜色 */
+  --scrollbar-bg: rgba(114, 46, 209, 0.3);
+  --scrollbar-hover: rgba(114, 46, 209, 0.6);
+}
