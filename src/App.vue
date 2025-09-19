@@ -112,7 +112,7 @@ import ChatInput from "@/components/ChatInput.vue";
 import WelcomeTips from "@/components/WelcomeTips.vue";
 import { useChat } from "@/stores/app";
 import { ref, computed, onMounted, h, watch, nextTick } from "vue";
-
+import { useShortcut } from "@/composables/useShortcut";
 const chat = useChat();
 
 // 主题管理
@@ -144,6 +144,19 @@ const themeOptions = [
 const currentTheme = computed(() => {
   return currentThemeName.value === "dark" ? darkTheme : null;
 });
+
+/* 清空并回到欢迎页 */
+function handleClear() {
+  chat.clear(); // store 里已把 isPristine 设回 true
+  nextTick(() => {
+    // 如果后续想滚到顶部/底部随意
+    // scrollToBottom()
+  });
+}
+
+/* 注册快捷键 */
+useShortcut("ctrl+k", handleClear);
+
 /* 快捷问句被点 */
 function handleQuickPick(text: string) {
   chat.send(text); // 发出去
