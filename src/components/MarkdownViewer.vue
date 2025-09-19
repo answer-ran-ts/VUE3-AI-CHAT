@@ -1,5 +1,8 @@
 <template>
-  <div class="markdown-body" v-html="html"></div>
+  <div v-if="!props.source || props.source.trim() === ''" class="loading">
+    <span></span><span></span><span></span>
+  </div>
+  <div v-else v-html="html"></div>
 </template>
 
 <script setup lang="ts">
@@ -22,9 +25,9 @@ const md = MarkdownIt({
     return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
   },
 });
-md.use((md) => {
+md.use((md: any) => {
   const defaultRender = md.renderer.rules.code_inline!;
-  md.renderer.rules.code_inline = (...args) => {
+  md.renderer.rules.code_inline = (...args: any) => {
     const [tokens, idx] = args;
     const content = tokens[idx].content;
     if (content.startsWith("$$") && content.endsWith("$$"))
@@ -44,5 +47,46 @@ const html = computed(() => md.render(props.source));
 }
 .markdown-body code {
   font-family: "Consolas", monospace;
+}
+.loading {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 32px;
+  color: #888;
+  user-select: none;
+  height: 1em;
+}
+
+.loading span {
+  display: inline-block;
+  width: 0.25em;
+  height: 0.25em;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: blink 1.4s infinite ease-in-out both;
+}
+
+.loading span:nth-child(1) {
+  animation-delay: 0s;
+}
+.loading span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
 }
 </style>

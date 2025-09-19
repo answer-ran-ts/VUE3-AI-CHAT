@@ -14,7 +14,7 @@
           "
         >
           <div style="font-weight: bold; color: var(--text-primary)">
-            RAN的私人AI助手
+            冉启的AI助手
           </div>
           <n-space>
             <n-dropdown
@@ -79,13 +79,21 @@
                   height: 100%;
                 "
               >
-                <MessageRow
-                  v-for="(m, idx) in chat.current.messages"
-                  :key="m.id"
-                  :msg="m"
-                  @retry="retryOne(idx)"
-                  @delete="deleteOne(idx)"
+                <!-- ① 空会话欢迎页 -->
+                <WelcomeTips
+                  v-if="chat.current.isPristine"
+                  @pick="handleQuickPick"
                 />
+                <!-- ② 真正的消息列表 -->
+                <template v-else>
+                  <MessageRow
+                    v-for="(m, idx) in chat.current.messages"
+                    :key="m.id"
+                    :msg="m"
+                    @retry="retryOne(idx)"
+                    @delete="deleteOne(idx)"
+                  />
+                </template>
               </div>
             </n-scrollbar>
             <ChatInput />
@@ -101,6 +109,7 @@ import { darkTheme } from "naive-ui";
 import { Moon, Sunny, TrashOutline, ColorPalette } from "@vicons/ionicons5";
 import MessageRow from "@/components/MessageRow.vue";
 import ChatInput from "@/components/ChatInput.vue";
+import WelcomeTips from "@/components/WelcomeTips.vue";
 import { useChat } from "@/stores/app";
 import { ref, computed, onMounted, h, watch, nextTick } from "vue";
 
@@ -135,7 +144,11 @@ const themeOptions = [
 const currentTheme = computed(() => {
   return currentThemeName.value === "dark" ? darkTheme : null;
 });
-
+/* 快捷问句被点 */
+function handleQuickPick(text: string) {
+  chat.send(text); // 发出去
+  chat.current.isPristine = false; // 标记不再是“空会话”
+}
 function changeTheme(themeName: string) {
   currentThemeName.value = themeName;
   document.documentElement.setAttribute("data-theme", themeName);

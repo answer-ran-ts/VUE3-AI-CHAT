@@ -7,9 +7,19 @@
       v-if="msg.role === 'user'"
       src="https://p6-passport.byteacctimg.com/img/user-avatar/f4fd4405fe6ff84a3b216ad3cd6e9bed~180x180.awebp"
     />
-    <n-avatar :size="36" :class="msg.role" v-else>
-      <n-icon :component="SparklesOutline" />
-    </n-avatar>
+    <!-- 助手头像 -->
+    <div v-else class="avatar-wrap">
+      <n-avatar
+        :size="40"
+        round
+        class="avatar assistant"
+        :style="{ background: botGradient }"
+      >
+        <n-icon :component="SparklesOutline" />
+      </n-avatar>
+      <!-- 小绿点：正在流式时闪烁 -->
+      <div v-if="isStreaming" class="pulse-dot" />
+    </div>
     <!-- 内容区 -->
     <div class="content">
       <!-- 用户纯文本 -->
@@ -50,7 +60,19 @@ import { NAvatar, NButton, NIcon, useMessage } from "naive-ui";
 import { SparklesOutline } from "@vicons/ionicons5";
 import MarkdownViewer from "./MarkdownViewer.vue";
 import type { Message } from "../types/chat";
+/* 随机机器人渐变 */
+const gradients = [
+  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+  "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+];
+const botGradient = computed(() => gradients[props.msg.id.charCodeAt(0) % 4]);
 
+/* 流式状态：父级把最后一条 assistant 且 content 末尾是 ▌ 就认为在流式 */
+const isStreaming = computed(
+  () => props.msg.role === "assistant" && props.msg.content.endsWith("▌")
+);
 /* props & emit */
 const props = defineProps<{ msg: Message }>();
 const emit = defineEmits<{ retry: []; delete: [] }>();
@@ -102,7 +124,30 @@ function copyCode() {
   background: var(--msg-user-bg);
   color: var(--text-user);
 }
-
+.pulse-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #18a058;
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(24, 160, 88, 0.6);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(24, 160, 88, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(24, 160, 88, 0);
+  }
+}
 /* 操作栏 */
 .actions {
   margin-top: 6px;

@@ -1,14 +1,48 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
+  // "files": [],
+  // "references": [
+  //   { "path": "./tsconfig.app.json" },
+  //   { "path": "./tsconfig.node.json" }
+  // ],
   "compilerOptions": {
-    // ...其他不动
-    "baseUrl": ".", // ① 根目录基准
+    "composite": true,
+    /* 基础选项 */
+    "target": "es6", // 编译后的目标JavaScript版本，如 "es5", "es6"/"es2015", "esnext" 等
+    "module": "esnext", // 模块系统，如 "commonjs", "esnext", "amd" 等
+    "lib": ["dom", "esnext"], // 需要包含的库文件，常用如 "dom", "es2015", "es2017", "esnext"
+    "allowJs": false, // 允许编译js文件
+    "checkJs": false, // 把js文件也当作TS进行类型检查
+    "jsx": "preserve", // JSX代码如何编译，常用 "preserve", "react", "react-jsx"
+    "sourceMap": true, // 生成对应的source map文件，方便调试
+    "outDir": "./dist", // 编译输出目录
+    "rootDir": "./src", // 输入文件的根目录
+
+    /* 增强编辑器体验 */
+    "strict": true, // 启用所有严格类型检查选项
+    "noImplicitAny": false, // 允许隐式any类型
+    "strictNullChecks": true, // 严格的null检查
+    "strictFunctionTypes": true, // 严格的函数参数双向协变检查
+    "noUnusedLocals": true, // 报告未使用的局部变量
+    "noUnusedParameters": true, // 报告未使用的函数参数
+    "noImplicitReturns": true, // 报告可能没有返回值的函数
+    "noFallthroughCasesInSwitch": true, // 报告switch语句穿透情况
+
+    /* 模块解析 */
+    "moduleResolution": "node", // 模块解析策略，通常用 "node"
+    "baseUrl": ".", // 基础目录，一般设置为项目根目录
     "paths": {
-      "@/*": ["src/*"] // ② 映射 @ -> src
-    }
-  }
+      // 路径映射，配合baseUrl使用
+      "@/*": ["src/*"]
+    },
+    "esModuleInterop": true, // 允许通过default导入CommonJS模块
+    "allowSyntheticDefaultImports": true, // 允许从没有default导出的模块默认导入
+    "resolveJsonModule": true, // 允许导入json文件
+    "isolatedModules": true, // 每个文件作为单独模块编译，配合babel等工具使用
+
+    /* 其他 */
+    "skipLibCheck": true, // 跳过库文件类型检查，加快编译速度
+    "forceConsistentCasingInFileNames": true // 文件名大小写一致性检查
+  },
+  "include": ["src"], // 包含的文件或目录
+  "exclude": ["node_modules", "dist"] // 排除的文件或目录
 }

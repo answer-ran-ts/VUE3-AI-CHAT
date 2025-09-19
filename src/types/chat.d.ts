@@ -14,4 +14,5 @@ export interface Session {
   messages: Message[];
   model: string;
   createdAt: number;
+  isPristine: boolean;
 }
