@@ -170,8 +170,15 @@ function changeTheme(themeName: string) {
 
 // 初始化主题
 onMounted(() => {
+  throttledScrollToBottom();
   const savedTheme = localStorage.getItem("theme") || "dark";
   changeTheme(savedTheme);
+  const savedId = localStorage.getItem("currentChatId");
+  if (savedId && chat.sessions.find((s) => s.id === savedId)) {
+    chat.currentId = savedId;
+  } else if (chat.sessions.length > 0) {
+    chat.currentId = chat.sessions[0].id;
+  }
 });
 
 // ========== 消息区：滚动到底部（带节流） ==========
@@ -216,18 +223,18 @@ function scrollToBottom() {
 }
 
 const throttledScrollToBottom = throttle(scrollToBottom, 250);
-
-// 首次进入滚动到底部
-onMounted(() => {
-  throttledScrollToBottom();
-});
-
 // 新增消息时滚动（长度变化）
 watch(
   () => chat.current.messages.length,
   () => throttledScrollToBottom()
 );
-
+// 记住当前的id
+watch(
+  () => chat.currentId,
+  (id) => {
+    if (id) localStorage.setItem("currentChatId", id);
+  }
+);
 // 流式更新时滚动（最后一条内容变化）
 watch(
   () => chat.current.messages[chat.current.messages.length - 1]?.content,

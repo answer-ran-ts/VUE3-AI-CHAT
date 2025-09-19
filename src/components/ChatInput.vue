@@ -7,22 +7,43 @@
       :disabled="loading"
       :autosize="{ minRows: 1, maxRows: 6 }"
       @keydown="handleKey"
+      @compositionstart="onCompositionStart"
+      @compositionend="onCompositionEnd"
     />
-    <n-button type="primary" :loading="loading" @click="submit">发送</n-button>
+    <n-button type="primary" :disabled="loading" @click="submit">发送</n-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useChat } from "@/stores/app";
 import { ref } from "vue";
-const { loading, send } = useChat();
+import { storeToRefs } from "pinia";
+const chat = useChat();
+const { loading } = storeToRefs(chat);
+const { send } = chat;
 const text = ref("");
+// 标记是否正在中文输入
+const isComposing = ref(false);
+
+function onCompositionStart() {
+  isComposing.value = true;
+}
+
+function onCompositionEnd() {
+  isComposing.value = false;
+}
+
 function handleKey(e: KeyboardEvent) {
   if (e.key === "Enter" && !e.shiftKey) {
+    if (isComposing.value) {
+      // 正在中文输入，按回车确认拼音，放行不要阻止
+      return;
+    }
     e.preventDefault();
     submit();
   }
 }
+
 function submit() {
   if (!text.value.trim()) return;
   send(text.value.trim());
