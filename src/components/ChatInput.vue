@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useChat } from "@/composables/useChat";
+import { useChat } from "@/stores/app";
 import { ref } from "vue";
 const { loading, send } = useChat();
 const text = ref("");

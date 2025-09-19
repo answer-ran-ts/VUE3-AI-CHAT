@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { uuid } from "@/utils/uuid";
-import type { Session, Message, ChatMessage } from "@/types/chat";
-import { chatStream } from "@/api/openai";
+import { uuid } from "../utils/uuid";
+import type { Session, Message } from "../types/chat";
+import { chatStream } from "../api/openai";
 import { ref, computed } from "vue";
 function load(): Session[] {
   try {
@@ -21,7 +21,7 @@ export const useChat = defineStore("chat", () => {
   );
 
   const current = computed(
-    () => sessions.value.find((s) => s.id === currentId.value)!
+    () => sessions.value.find((s: Session) => s.id === currentId.value)!
   );
 
   function createEmptySession(): Session {
@@ -54,23 +54,27 @@ export const useChat = defineStore("chat", () => {
       ts: Date.now(),
     };
     current.value.messages.push(assistantMsg);
+    // 使用响应式引用，避免直接修改原始对象导致视图不更新
+    const reactiveAssistantMsg =
+      current.value.messages[current.value.messages.length - 1];
 
     const ctrl = new AbortController();
     try {
       await chatStream(
-        current.value.messages.map((m) => ({
+        current.value.messages.map((m: Message) => ({
           role: m.role,
           content: m.content,
         })),
-        (delta) => {
-          assistantMsg.content += delta;
-          if (assistantMsg.content.length < 50)
-            current.value.title = assistantMsg.content.slice(0, 20);
+        (delta: string) => {
+          reactiveAssistantMsg.content += delta;
+          if (reactiveAssistantMsg.content.length < 50) {
+            current.value.title = reactiveAssistantMsg.content.slice(0, 20);
+          }
         },
         ctrl.signal
       );
     } catch (e: any) {
-      assistantMsg.content = `❌ ${e.message}`;
+      reactiveAssistantMsg.content = `❌ ${e.message}`;
     }
     save(sessions.value);
   }

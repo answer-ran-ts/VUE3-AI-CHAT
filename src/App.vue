@@ -14,7 +14,7 @@
           "
         >
           <div style="font-weight: bold; color: var(--text-primary)">
-            AI助手
+            RAN的私人AI助手
           </div>
           <n-space>
             <n-dropdown
@@ -23,7 +23,7 @@
               :icon-size="16"
             >
               <n-button text>
-                <n-icon size="20" style="position: relative; top: 1px">
+                <n-icon size="20" style="position: relative; top: 3px">
                   <Moon v-if="currentThemeName === 'light'" />
                   <Sunny v-else-if="currentThemeName === 'dark'" />
                   <ColorPalette v-else />
@@ -54,7 +54,7 @@
                   :class="{ active: s.id === chat.currentId, listItem: true }"
                   @click="chat.currentId = s.id"
                 >
-                  <n-ellipsis style="max-width: 160px">{{
+                  <n-ellipsis style="max-width: 140px">{{
                     s.title
                   }}</n-ellipsis>
                   <template #suffix>
@@ -70,8 +70,15 @@
           <n-layout-content
             content-style="display: flex; flex-direction: column; height: 100%"
           >
-            <n-scrollbar style="flex: 1">
-              <div style="max-width: 800px; margin: 0 auto; padding: 16px">
+            <n-scrollbar style="flex: 1" ref="scrollRef">
+              <div
+                style="
+                  max-width: calc(100vw - 280px);
+                  margin: 0 auto;
+                  padding: 16px;
+                  height: 100%;
+                "
+              >
                 <MessageRow
                   v-for="(m, idx) in chat.current.messages"
                   :key="m.id"
@@ -95,7 +102,7 @@ import { Moon, Sunny, TrashOutline, ColorPalette } from "@vicons/ionicons5";
 import MessageRow from "@/components/MessageRow.vue";
 import ChatInput from "@/components/ChatInput.vue";
 import { useChat } from "@/stores/app";
-import { ref, computed, onMounted, h } from "vue";
+import { ref, computed, onMounted, h, watch, nextTick } from "vue";
 
 const chat = useChat();
 
@@ -140,6 +147,66 @@ onMounted(() => {
   const savedTheme = localStorage.getItem("theme") || "dark";
   changeTheme(savedTheme);
 });
+
+// ========== 消息区：滚动到底部（带节流） ==========
+const scrollRef = ref<any>(null);
+
+function throttle<T extends (...args: any[]) => void>(fn: T, wait = 250) {
+  let last = 0;
+  let timer: number | null = null;
+  let pendingArgs: any[] | null = null;
+  return (...args: any[]) => {
+    const now = Date.now();
+    const remaining = wait - (now - last);
+    pendingArgs = args;
+    const run = () => {
+      last = Date.now();
+      timer = null;
+      if (pendingArgs) fn(...pendingArgs);
+      pendingArgs = null;
+    };
+    if (remaining <= 0) {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      run();
+    } else if (!timer) {
+      timer = window.setTimeout(run, remaining);
+    }
+  };
+}
+
+function scrollToBottom() {
+  nextTick(() => {
+    const inst = scrollRef.value as any;
+    if (!inst) return;
+    if (typeof inst.scrollTo === "function") {
+      inst.scrollTo({ top: Number.MAX_SAFE_INTEGER, behavior: "auto" });
+    } else if (inst?.containerRef) {
+      inst.containerRef.scrollTop = inst.containerRef.scrollHeight;
+    }
+  });
+}
+
+const throttledScrollToBottom = throttle(scrollToBottom, 250);
+
+// 首次进入滚动到底部
+onMounted(() => {
+  throttledScrollToBottom();
+});
+
+// 新增消息时滚动（长度变化）
+watch(
+  () => chat.current.messages.length,
+  () => throttledScrollToBottom()
+);
+
+// 流式更新时滚动（最后一条内容变化）
+watch(
+  () => chat.current.messages[chat.current.messages.length - 1]?.content,
+  () => throttledScrollToBottom()
+);
 
 /* 重试：删除助手最后一条 + 重新发送用户上一条 */
 function retryOne(idx: number) {

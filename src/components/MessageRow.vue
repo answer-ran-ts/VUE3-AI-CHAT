@@ -1,9 +1,14 @@
 <template>
   <div class="message-row" :class="msg.role">
     <!-- 头像 -->
-    <n-avatar :size="36" :class="msg.role">
-      <n-icon v-if="msg.role === 'user'" :component="PersonOutline" />
-      <n-icon v-else :component="SparklesOutline" />
+    <n-avatar
+      :size="36"
+      :class="msg.role"
+      v-if="msg.role === 'user'"
+      src="https://p6-passport.byteacctimg.com/img/user-avatar/f4fd4405fe6ff84a3b216ad3cd6e9bed~180x180.awebp"
+    />
+    <n-avatar :size="36" :class="msg.role" v-else>
+      <n-icon :component="SparklesOutline" />
     </n-avatar>
     <!-- 内容区 -->
     <div class="content">
@@ -11,7 +16,11 @@
       <div v-if="msg.role === 'user'" class="user-txt">{{ msg.content }}</div>
 
       <!-- 助手 Markdown -->
-      <MarkdownViewer v-else :source="msg.content" />
+      <MarkdownViewer
+        v-else
+        :key="msg.id + ':' + msg.content.length"
+        :source="msg.content"
+      />
 
       <!-- 操作栏 -->
       <div class="actions">
@@ -38,9 +47,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { NAvatar, NButton, NIcon, useMessage } from "naive-ui";
-import { PersonOutline, SparklesOutline } from "@vicons/ionicons5";
+import { SparklesOutline } from "@vicons/ionicons5";
 import MarkdownViewer from "./MarkdownViewer.vue";
-import type { Message } from "@/types/chat";
+import type { Message } from "../types/chat";
 
 /* props & emit */
 const props = defineProps<{ msg: Message }>();
@@ -74,7 +83,7 @@ function copyCode() {
 
 /* 头像颜色 */
 .avatar.user {
-  background: var(--avatar-user-bg);
+  /* background: var(--avatar-user-bg); */
 }
 .avatar.assistant {
   background: var(--avatar-assistant-bg);
